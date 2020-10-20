@@ -1,0 +1,10 @@
+*.swp
+
+# Config with passwords
+#config.js
+
+# node_modules
+node_modules
+
+.backup/
+#!.backup/

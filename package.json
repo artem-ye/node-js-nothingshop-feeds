@@ -1,0 +1,21 @@
+{
+  "name": "002-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "fast-csv": "^4.0.2",
+    "google-translate-api": "^2.3.0",
+    "html-pdf": "^2.2.0",
+    "mysql2": "^2.0.0",
+    "request": "^2.88.0",
+    "translation-google": "^0.2.1",
+    "xml2js": "^0.4.22"
+  }
+}

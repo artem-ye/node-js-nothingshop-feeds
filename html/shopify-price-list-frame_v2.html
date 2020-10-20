@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Price list</title>
+
+    <style>
+        a, div {
+            line-height: 1.5;
+
+            text-decoration: none;
+        }
+        * {
+            font-family: "Work Sans",sans-serif;
+
+        }
+        table {
+            /*width: 100%;*/
+            margin: auto;
+        }
+        td {
+            vertical-align: center;
+        }
+        .td-a {
+            text-align: right;
+            padding-right: 5px;
+            color: #0000ffb5;
+            white-space: nowrap;
+        }
+        .td-info {
+            text-align: left;
+            padding-left: 5px;
+            font-size: 90%;
+            color: #3d4246;
+            width: 50%;
+        }
+    </style>
+
+</head>
+<body>
+
+
+
+    <table>
+        <tbody>
+        <tr>
+            <td class="td-a"></td>
+            <td class="td-info"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div></div>
+
+    <script>
+
+        async function parseAutoIndexPagePdfFileList(url) {
+
+            let body;
+            let arrRetValParsedLinks = [];
+
+            // Downloading html page
+            try {
+                body = await httpGet(url);
+            }
+            catch (e) {
+                let msg = `Unable to get ${TOP_500_URL}. ${e.message}`;
+                throw new Error(msg);
+            }
+
+            // Parsing
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(body, "text/html");
+
+            for (let el of doc.getElementsByTagName('a')) {
+
+                if (! el.text.trim().endsWith('pdf'))
+                   continue;
+
+                // Parsing file size and date created
+                //let matchRes = el.nextSibling.textContent.match(/^(\s*)(\S+\s+\S+)(\s+)(\w+).*/);
+                let matchRes = el.nextSibling.textContent.match(/^(\s*)(\S+)(\s+\S+\s+)(\w+).*/);
+                let dateCreated = matchRes[2];
+                let fileSize = matchRes[4];
+
+                arrRetValParsedLinks.push({
+                    href: url + el.text,
+                    text: el.text,
+                    dateCreated: dateCreated,
+                    fileSize: fileSize
+                });
+
+            }
+
+            return arrRetValParsedLinks;
+
+        }
+
+        function sortCategorizedLinkList(arrLinkList) {
+
+            // Group links by title (file name prefix without part num)
+            let objGroupedLinks = arrLinkList.reduce((accum, elLink) => {
+
+                // Parsing file name
+                let matchRes = elLink.text.match(/(^.*)\s+pt\s+([0-9]+)/);
+                let linkTitle = matchRes[1];
+                let linkPartNum = Number(matchRes[2]);
+
+                if (!accum[linkTitle])
+                    accum[linkTitle] = [];
+
+                accum[linkTitle].push({
+                    link: elLink,
+                    linkPartNum: linkPartNum
+                });
+
+                return accum;
+
+            }, {});
+
+            // 1. Sort groups (keys) by titles
+            return Object.keys(objGroupedLinks).sort((titleA, titleB) => {
+
+                let skuQtyTitleA = Number(titleA.match(/.*\s+(\d+)\ssku.*/)[1]);
+                let skuQtyTitleB = Number(titleB.match(/.*\s+(\d+)\ssku.*/)[1]);
+
+                if (skuQtyTitleA == skuQtyTitleB)
+                    return 0;
+                else
+                    return skuQtyTitleA < skuQtyTitleB ? 1 : -1;
+
+            // 2. Sort elements inside groups, return result - array of link elements
+            }).reduce((retVal, title) => {
+
+                // Sort links inside group
+                objGroupedLinks[title].sort((objLinkEntryA, objLinkEntryB) => {
+                    return objLinkEntryA.linkPartNum > objLinkEntryB.linkPartNum ? 1 : -1
+                }).forEach(
+                    // Push groups links to result array
+                    objLinkEntry => retVal.push(objLinkEntry.link)
+                );
+
+                return retVal;
+
+            }, []);
+
+        }
+
+        function createNewRowTableFileList(trTemplate, {href, text, dateCreated, fileSize}) {
+
+            let newRow = trTemplate.cloneNode(true);
+
+            let a = document.createElement('a');
+            a.href = href;
+            a.download = text;
+            a.text = text;
+
+            let arrTd = newRow.getElementsByTagName('td');
+            arrTd[0].appendChild(a);
+            arrTd[1].innerText = dateCreated + ' ' + fileSize;
+
+            return newRow;
+
+        }
+
+        async function httpGet(url) {
+
+            return new Promise((resolve, reject) => {
+
+                const req = new XMLHttpRequest();
+                req.open('GET', url);
+
+                req.onload = (ev) => {
+                    if (req.status == 200)
+                        resolve(req.responseText);
+                    else {
+                        let msg = `Unable to get ${url}; Status ${req.status}; Response: ${req.responseText}`;
+                        reject(new Error(msg));
+                    }
+
+                };
+
+                req.onerror= (ev) => {
+                    reject(new Error(`Unable to get ${url}; Msg ${req.statusText}`));
+                };
+
+                req.send(null);
+
+            });
+
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////
+        // MAIN
+        //////////////////////////////////////////////////////////////////////////////////
+
+        // Paths
+        const BASE_URL = window.location.origin;
+        const TOP_500_URL = BASE_URL + '/top500/';
+        const CATEGORIZED_PRICES = BASE_URL + '/categorized/';
+
+        // --------------------------------------------------------------------------------
+        // File list table render variables
+
+        // First row - uses for place top-500 items in beginning of the table
+        // new rows will be insert before this element
+        // element will be delete after rendering top-500 link list
+        let tableFirstRow = document.getElementsByTagName('table')[0].getElementsByTagName('tr')[0];
+        // Template for new rows
+        const tableFileListTemplateRow = tableFirstRow.cloneNode(true);
+        // Parent element for categorized price rows
+        const tableFileListTemplateRowParent = tableFirstRow.parentElement;
+
+        // TOP 500
+        parseAutoIndexPagePdfFileList(TOP_500_URL).then(arrFileList => {
+
+            arrFileList.forEach(elLink => {
+                let newRow = createNewRowTableFileList(tableFileListTemplateRow, elLink);
+                tableFileListTemplateRowParent.insertBefore(newRow, tableFirstRow);
+            });
+
+            tableFirstRow.remove();
+
+        }).catch(e => {
+            console.error('Error',  'Unable to render top-500 file list', e.message);
+        });
+
+        // Categorized prices
+        parseAutoIndexPagePdfFileList(CATEGORIZED_PRICES).then(arrFileList => {
+
+            sortCategorizedLinkList(arrFileList).forEach(elLink => {
+                let newRow = createNewRowTableFileList(tableFileListTemplateRow, elLink);
+                tableFileListTemplateRowParent.appendChild(newRow);
+            });
+
+        }).catch(e => {
+            console.error('Error', 'Unable to render categorized file list', e.message);
+        });
+
+</script>
+
+</body>
+</html>
