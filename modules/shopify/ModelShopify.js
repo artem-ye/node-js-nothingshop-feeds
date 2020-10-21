@@ -14,17 +14,6 @@ class ModelShopify {
             port: 443
         };
 
-
-        // nothinghsop
-        /*
-        this.apiAuth = {
-          key: '87a006d60434d5f9f88e1cfddbad3565', //user
-          pass: 'b6561c9aae7bbeb1360430fa33e558f5',
-          host: 'nothingshop-com.myshopify.com',
-          port: 443
-        };
-        */
-
         this.db = objModelCatalogue.db;
         this.dbTables = Object.assign({}, objModelCatalogue.dbTables);
 
