@@ -8,22 +8,12 @@ class ModelShopify {
 
 
         this.apiAuth = {
-            key: 'efe60137abb1d5b23fce690e0f7a8a1e', //user
-            pass: 'ebcc227fa3ae90c0ff4eec7629eeab1d',
+            key: '', //user
+            pass: '',
             host: 'mersadatrade.myshopify.com',
             port: 443
         };
 
-
-        // nothinghsop
-        /*
-        this.apiAuth = {
-          key: '87a006d60434d5f9f88e1cfddbad3565', //user
-          pass: 'b6561c9aae7bbeb1360430fa33e558f5',
-          host: 'nothingshop-com.myshopify.com',
-          port: 443
-        };
-        */
 
         this.db = objModelCatalogue.db;
         this.dbTables = Object.assign({}, objModelCatalogue.dbTables);
