@@ -7,3 +7,4 @@ db = {
 
 module.exports.db = db;
 module.exports.feeds_dir_path = '/var/www/static_feeds';
+

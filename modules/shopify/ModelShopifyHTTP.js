@@ -45,7 +45,6 @@ class ModelShopifyHTTP {
 
             inventory_location_get: URI_API_PREFIX + 'locations.json',
             inventory_levels_set_post: URI_API_PREFIX + 'inventory_levels/set.json',
-
         };
 
     }

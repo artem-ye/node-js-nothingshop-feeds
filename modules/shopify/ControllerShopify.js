@@ -19,23 +19,6 @@ function createObjectShopify() {
 
 }
 
-
-
-
-/*
-
-objShopify.syncAllData().then(_ => {
-//objShopify.syncInventoryData().then(_ => {
-    console.log('Done');
-    modelDB.close();
-}).catch(err => {
-    console.log(err);
-    modelDB.close();
-});
-
-
- */
-
 const syncAllData = async function () {
 
     let objShopify;
@@ -75,8 +58,6 @@ const test = async function() {
         console.log('ERROR', err.message);
         throw err;
     });
-
-
 
 }
 
