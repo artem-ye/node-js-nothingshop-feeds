@@ -8,8 +8,8 @@ class ModelShopify {
 
 
         this.apiAuth = {
-            key: 'efe60137abb1d5b23fce690e0f7a8a1e', //user
-            pass: 'ebcc227fa3ae90c0ff4eec7629eeab1d',
+            key: '', //user
+            pass: '',
             host: 'mersadatrade.myshopify.com',
             port: 443
         };
