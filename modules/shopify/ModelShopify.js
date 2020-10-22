@@ -1219,7 +1219,7 @@ class ModelShopify {
     }
 
     async addSiteCustomCollection(title) {
-        //let uri = "/admin/api/2019-07/custom_collections.json";//this.shopifyHttp.apiPaths.custom_collections_post;
+        
         let uri = this.shopifyHttp.apiPaths.custom_collections_post;
         let postData = {custom_collection: {title: title} };
         let res = await this.shopifyHttp.httpPost(uri, postData, '', 201);

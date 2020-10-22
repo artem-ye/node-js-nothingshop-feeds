@@ -9,8 +9,6 @@ node_modules
 .backup/
 #!.backup/
 
-
-
 # To disable track file changes
 #       git update-index --assume-unchanged <file>
 # Enable track file changes
