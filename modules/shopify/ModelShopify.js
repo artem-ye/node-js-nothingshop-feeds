@@ -4,16 +4,14 @@ const ModelShopifyHTTP = require('./ModelShopifyHTTP');
 
 class ModelShopify {
 
-    constructor(objModelCatalogue) {
-
+    constructor(objModelCatalogue, apiCredentials) {
 
         this.apiAuth = {
-            key: '', //user
-            pass: '',
-            host: 'mersadatrade.myshopify.com',
-            port: 443
+            key: apiCredentials.key, //user
+            pass: apiCredentials.pass,
+            host: apiCredentials.host,
+            port: apiCredentials.port
         };
-
 
         this.db = objModelCatalogue.db;
         this.dbTables = Object.assign({}, objModelCatalogue.dbTables);
@@ -30,30 +28,7 @@ class ModelShopify {
     //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     async test() {
-
-        let rsSiteCollects = await this.getSiteCollects().catch(err => {
-            let msg = ERR_PREFIX + ' Unable to get site collects. getSiteCollects Error: ' + err.message;
-            throw new Error(msg);
-        });
-
-
-        console.log('Total collects records', rsSiteCollects.length);
-        console.log('DEBUG', 'filter');
-        console.dir(rsSiteCollects.filter(el => el.product_id == 4936446836868));
-        //throw new Error('DEBUG. Break');
-
-
-        /*
-                let rsProducts = [
-                    {db_product_id: '73849', product_id: '4815093956740'}
-                ];
-
-                let rsCustomCollections = await this.syncSiteCustomCollections();
-
-                // Products custom collections
-                await this.syncSiteProductsCustomCollections(rsProducts, rsCustomCollections);
-         */
-
+      
     }
 
     async syncAllData() {

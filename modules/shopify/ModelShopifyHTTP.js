@@ -15,7 +15,8 @@ class ModelShopifyHTTP {
             port: port
         };
 
-        const URI_API_PREFIX = '/admin/api/2019-10/';
+        //const URI_API_PREFIX = '/admin/api/2019-10/';
+        const URI_API_PREFIX = '/admin/api/2020-01/';
 
         // /admin/api/2020-01/products/#{product_id}/metafields.json
 
@@ -33,13 +34,11 @@ class ModelShopifyHTTP {
             products_put: URI_API_PREFIX + 'products/%OPTIONS%.json',
 
             products_metafields_post: URI_API_PREFIX + 'products/%OPTIONS%/metafields.json',
-
-            //products_variant_delete: URI_API_PREFIX + 'products/%OPTIONS%.json',
+            
             products_variant_post: URI_API_PREFIX + 'products/%OPTIONS%/variants.json',
             products_variant_put: URI_API_PREFIX + 'variants/%OPTIONS%.json',
 
-            collects_get: URI_API_PREFIX + 'collects.json?limit=250',
-            //collects_get: '/admin/api/2020-04/collects.json?limit=249',
+            collects_get: URI_API_PREFIX + 'collects.json?limit=250',            
             collects_post: URI_API_PREFIX + 'collects.json',
             collects_delete: URI_API_PREFIX + 'collects/%OPTIONS%.json',
 

@@ -13,7 +13,7 @@ function createObjectShopify() {
 
     let modelDB = new moduleDataBase.DataBase(config.db);
     let modelCatalogue = new moduleModelCatalogue.ModelCatalogue(modelDB);
-    let objShopify = new ModelShopify(modelCatalogue);
+    let objShopify = new ModelShopify(modelCatalogue, config.shopifyApiCredentials);
 
     return objShopify;
 
@@ -43,21 +43,21 @@ const syncAllData = async function () {
 const test = async function() {
 
     let objShopify;
-
-    try {
-        objShopify = createObjectShopify();
-    } catch (e) {
+    
+    try {        
+        objShopify = createObjectShopify();        
+    } catch (e) {        
         throw e;
     }
-
+    
     objShopify.test().then(_ => {
         objShopify.db.close().catch(err => {
             console.log('Unable to close db.', err.message);
         });
-    }).catch(err => {
-        console.log('ERROR', err.message);
-        throw err;
-    });
+    }).then(
+        ok  => {console.log("Test passed")},
+        err => {throw err}
+    );               
 
 }
 
